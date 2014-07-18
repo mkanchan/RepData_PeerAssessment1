@@ -1,7 +1,7 @@
 Reproducible Research - Peer Assessment 1
 =========================================
     
-By: Mukesh Kanchan    
+By:- Mukesh Kanchan    
         
 Introduction
 ------------
