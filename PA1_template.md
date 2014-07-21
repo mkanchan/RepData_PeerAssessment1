@@ -1,7 +1,7 @@
 Reproducible Research - Peer Assessment 1
 =========================================
     
-By: Mukesh Kanchan    
+By:- Mukesh Kanchan    
         
 Introduction
 ------------
@@ -13,7 +13,8 @@ Loading and Processing the data
 -------------------------------
 
 **Loading the data**
-```{r echo=TRUE}
+
+```r
 # Set working directory
 setwd("./data")
 
@@ -29,13 +30,13 @@ activity <- read.csv('activity.csv')
 ```
 
 **Processing the data**
-```{r echo=TRUE}
+
+```r
 # Convert date to date class
 activity$date <- as.Date(activity$date, "%Y-%m-%d")
 
 # Convert interval to numeric
 activity$interval <- as.numeric(activity$interval)
-
 ```
 
 
@@ -43,7 +44,8 @@ activity$interval <- as.numeric(activity$interval)
 Mean total number of steps taken per day
 ----------------------------------------
 **Histogram of the total number of steps taken each day**
-```{r echo=TRUE}
+
+```r
 # Use aggregate sum function to find the total number of steps each day
 total.date.steps <- aggregate(steps ~ date, activity, sum, na.rm=T)
 
@@ -53,24 +55,36 @@ hist(total.date.steps$steps,
      xlab = "Total Number of Steps")
 ```
 
+![plot of chunk unnamed-chunk-3](figure/unnamed-chunk-3.png) 
+
 
 **The mean and median total number of steps taken per day**
 
 Mean total number of steps taken per day
 
-```{r echo=TRUE}
+
+```r
 # NAs are removed already
 mean(total.date.steps$steps)
 ```
 
+```
+## [1] 10766
+```
+
 Median total number of steps taken per day
 
-```{r echo=TRUE}
+
+```r
 # NAs are removed already
 median(total.date.steps$steps)
 ```
 
-*The mean and median total number of steps per day are `r format(mean(total.date.steps$steps),digit=6)` and `r median(total.date.steps$steps)` steps respectively.*
+```
+## [1] 10765
+```
+
+*The mean and median total number of steps per day are 10766.2 and 10765 steps respectively.*
 
 
 
@@ -79,7 +93,8 @@ Average daily activity pattern
 
 
 **Time Series Plot**
-```{r echo=TRUE}
+
+```r
 # aggregate steps as interval to get average number of steps in an interval across all days
 total.interval.steps <- aggregate(steps ~ interval, activity, mean, na.rm=T)
 
@@ -93,9 +108,12 @@ plot(total.interval.steps$interval,
      ylab="Average number of steps")
 ```
 
+![plot of chunk unnamed-chunk-6](figure/unnamed-chunk-6.png) 
+
 
 **Maximun Number of Steps**
-```{r echo=TRUE}
+
+```r
 # row id of maximum average number of steps in an interval
 maxAveStepsRow <- which.max(total.interval.steps$steps)
 
@@ -103,7 +121,12 @@ maxAveStepsRow <- which.max(total.interval.steps$steps)
 total.interval.steps[maxAveStepsRow, ]
 ```
 
-*The interval `r total.interval.steps[maxAveStepsRow, ]$interval` contains the maximum number of steps i.e. `r total.interval.steps[maxAveStepsRow, ]$steps`*
+```
+##     interval steps
+## 104      835 206.2
+```
+
+*The interval 835 contains the maximum number of steps i.e. 206.1698*
 
 
 
@@ -112,18 +135,24 @@ Input missing values
 
 **Missing Values**
 
-```{r echo=TRUE}
+
+```r
 # only step has NA values
 sum(is.na(activity$steps))
 ```
-*Total number of missing values in dataset: `r sum(is.na(activity$steps))`*
+
+```
+## [1] 2304
+```
+*Total number of missing values in dataset: 2304*
 
 
 
 **Filling in Missing Value** 
 
 Using the mean for the interval as a replacement for missing values.    
-```{r echo=TRUE}
+
+```r
 # merge activity and tableIntervalSteps dataframes
 activity.missing <- merge(activity, total.interval.steps, by = "interval", sort = FALSE)  
 
@@ -143,11 +172,22 @@ activity.missing$steps.mean <- NULL
 head(activity.missing)
 ```
 
+```
+##     interval   steps       date
+## 1          0 1.71698 2012-10-01
+## 63         5 0.33962 2012-10-01
+## 128       10 0.13208 2012-10-01
+## 205       15 0.15094 2012-10-01
+## 264       20 0.07547 2012-10-01
+## 327       25 2.09434 2012-10-01
+```
+
 
 **New Dataset with Filled-in Missing Values**    
 
 Creating new dataset with rounded steps and original order of columns
-```{r echo=TRUE}
+
+```r
 #rounding steps to whole number
 activity.missing$steps <- round(activity.missing$steps, digits=0)
 
@@ -158,9 +198,20 @@ activity.new <- activity.missing[, c(2, 3, 1)]
 head(activity.new)
 ```
 
+```
+##     steps       date interval
+## 1       2 2012-10-01        0
+## 63      0 2012-10-01        5
+## 128     0 2012-10-01       10
+## 205     0 2012-10-01       15
+## 264     0 2012-10-01       20
+## 327     2 2012-10-01       25
+```
+
 
 **Histogram of the total number of steps taken each day**
-```{r echo=TRUE}
+
+```r
 # Use aggregate sum function to find the total number of steps each day
 total.date.steps.new <- aggregate(steps ~ date, activity.new, sum, na.rm=T)
 
@@ -170,24 +221,36 @@ hist(total.date.steps.new$steps,
      xlab = "Total Number of Steps")
 ```
 
+![plot of chunk unnamed-chunk-11](figure/unnamed-chunk-11.png) 
+
 
 **Mean and median total number of steps taken per day**
 
 Mean total number of steps taken per day
 
-```{r echo=TRUE}
+
+```r
 # No NAs here
 mean(total.date.steps.new$steps)
 ```
 
+```
+## [1] 10766
+```
+
 Median total number of steps taken per day
 
-```{r echo=TRUE}
+
+```r
 # No NAs here
 median(total.date.steps.new$steps)
 ```
 
-*The mean and median total number of steps per day after replacing 'NA' are `r format(mean(total.date.steps.new$steps),digit=6)` and `r format(median(total.date.steps.new$steps),digit=6)` steps respectively.*
+```
+## [1] 10762
+```
+
+*The mean and median total number of steps per day after replacing 'NA' are 10765.6 and 10762 steps respectively.*
 
 The Mean is equal to the estimates from the first part of the assignment.
 
@@ -204,13 +267,13 @@ Differences in activity patterns between weekdays and weekends
 
 
 **Create new factor variable for weekdays**
-```{r echo=TRUE}
+
+```r
 # create a factor with the names of the days for all dates
 activity.new$weekdays <- factor(format(activity.new$date, "%A"))
 
 #replace variable with weekdays and weekends
 levels(activity.new$weekdays) <- list(weekday = c("Monday", "Tuesday", "Wednesday", "Thursday", "Friday"), weekend = c("Saturday", "Sunday"))
-
 ```
 
     
@@ -218,7 +281,8 @@ levels(activity.new$weekdays) <- list(weekday = c("Monday", "Tuesday", "Wednesda
 **Panel Plot: Average number of steps taken on weekdays and weekends**
 
     
-```{r echo=TRUE}
+
+```r
 # aggregate steps as interval to get average number of steps in an interval across weekdays and weekends
 total.interval.steps.week <- aggregate(steps ~ weekdays * interval, activity.new, mean, na.rm=T)
 
@@ -230,5 +294,9 @@ xyplot(total.interval.steps.week$steps ~ total.interval.steps.week$interval | to
        xlab = "Interval", 
        ylab = "Number of steps")
 ```
+
+
+
+![plot of chunk unnamed-chunk-15](figure/unnamed-chunk-15.png) 
 
 *------------End of Document--------------*
